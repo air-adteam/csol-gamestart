@@ -15,6 +15,7 @@ Widget::Widget(QWidget *parent) :
     this->setProperty("canMove",true);
     this->initUi();
     this->initMember();
+    //setWindowTitle("CSOL ADTeam服务器启动器");
     ui->update_progress->setValue(0);
     ui->update_progress->hide();
     gengxin = new QNetworkAccessManager();
@@ -23,6 +24,14 @@ Widget::Widget(QWidget *parent) :
     QUrl getVersionurl("http://api.adteam.asia/csol/update.php");
     gengxininfo->get(QNetworkRequest(getVersionurl));
     ui->label_4->hide();
+    /*bool admin = QRunInfo::AdminAuthorization().hasAdminRights();
+    if(admin == false){
+        myMbox->setIcon("error");
+        myMbox->setBodyText(u8"错误：请使用管理员权限启动本程序");
+        myMbox->setButtonText(u8"确定");
+        myMbox->exec();
+        delete this;
+    }*/
 
     connect(gengxininfo,&QNetworkAccessManager::finished,this,([=](QNetworkReply *reply){
         int status_code = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt(); //获取网络状态码
@@ -213,6 +222,13 @@ void Widget::update(QByteArray &bytearray){
     }
     QJsonObject netv = netversion.object();
     qDebug() << netv;
+    if(netv.value("update").toString() == "true"){
+        myMbox->setIcon("error");
+        myMbox->setBodyText(u8"错误：服务器正在更新中，请在更新完成后再进入游戏");
+        myMbox->setButtonText(u8"确定");
+        myMbox->exec();
+        return;
+    }
     if(netv.value("version").toString() != local_version){//如果版本不一致
         QJsonArray filenames = netv.value("filelist").toArray();
         QVector<QString> filename;
@@ -231,6 +247,8 @@ void Widget::update(QByteArray &bytearray){
         myMbox->setBodyText(u8"游戏正在启动中，如果出现权限窗口请点击确定");
         myMbox->setButtonText(u8"我知道了");
         myMbox->exec();
+        n2n p;
+        p.run();
         QString command = "cd " + QCoreApplication::applicationDirPath() + "/Bin && start CSOLauncher_Exe.exe --ip 10.200.173.1";
         QByteArray kaishi = command.toLatin1();
         qDebug() << kaishi.data();

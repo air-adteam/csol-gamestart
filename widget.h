@@ -4,6 +4,7 @@
 #include <QWidget>
 //最小化相关
 #include <QSystemTrayIcon>
+#include <adminauthorization.h>
 #include <QCloseEvent>
 #include <QMenu>
 #include <QAction>
@@ -18,6 +19,7 @@
 //自定义弹窗
 #include "mymessagebox.h"
 #include "download.h"
+#include "n2n.h"
 
 namespace Ui {
 class Widget;

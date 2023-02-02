@@ -37,6 +37,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     download.cpp \
         main.cpp \
+    n2n.cpp \
         widget.cpp \
     appinit.cpp \
     mymessagebox.cpp
@@ -45,6 +46,7 @@ HEADERS += \
     appinit.h \
     download.h \
     mymessagebox.h \
+    n2n.h \
     widget.h
 
 FORMS += \
@@ -60,3 +62,10 @@ else:unix: LIBS += -LC:/Qt/quazip/lib/ -lquazip
 
 INCLUDEPATH += C:/Qt/quazip/include
 DEPENDPATH += C:/Qt/quazip/include
+
+win32:CONFIG(release, debug|release): LIBS += -LC:/Qt/qruninfo/lib/ -lQRunInfo
+else:win32:CONFIG(debug, debug|release): LIBS += -LC:/Qt/qruninfo/lib/ -lQRunInfod
+else:unix: LIBS += -LC:/Qt/qruninfo/lib/ -lQRunInfo
+
+INCLUDEPATH += C:/Qt/qruninfo/include
+DEPENDPATH += C:/Qt/qruninfo/include
